@@ -54,7 +54,6 @@ public class CuentaController {
             estadoDTO.setEstatus(capaService.deposito(numeroCuenta, deposito));
             return ResponseEntity.ok().body(estadoDTO);
         }
-
         return ResponseEntity.badRequest().body(estadoDTO);
     }
 

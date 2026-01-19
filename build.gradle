@@ -28,6 +28,13 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
 
     runtimeOnly 'org.postgresql:postgresql'
+
+    //Dependencia para documentacion con swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0")
+
+    //Dependencia para spring security basica
+    implementation("org.springframework.boot:spring-boot-starter-security:4.0.0")
+
 }
 
 tasks.test {
