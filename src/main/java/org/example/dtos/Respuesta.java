@@ -2,16 +2,16 @@ package org.example.dtos;
 
 import java.util.List;
 
-public class EstadoDTO {
+public class Respuesta {
 
     private int estatus;
     private Object objeto;
     private List<?> listaObjetos;
 
-    public EstadoDTO() {
+    public Respuesta() {
     }
 
-    public EstadoDTO(int estatus, Object objeto, List<?> listaObjetos) {
+    public Respuesta(int estatus, Object objeto, List<?> listaObjetos) {
         this.estatus = estatus;
         this.objeto = objeto;
         this.listaObjetos = listaObjetos;
@@ -40,5 +40,4 @@ public class EstadoDTO {
     public void setListaObjetos(List<?> listaObjetos) {
         this.listaObjetos = listaObjetos;
     }
-
 }

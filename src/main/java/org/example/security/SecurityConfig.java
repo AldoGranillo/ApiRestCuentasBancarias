@@ -19,22 +19,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**", "/actuator/health", "/swagger-ui/**",
-                                "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/consultas/**").permitAll()
-                        .requestMatchers("/api/consultas/**").authenticated()
-
-                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        );
         return http.build();
     }
 

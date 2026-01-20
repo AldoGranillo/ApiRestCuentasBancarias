@@ -3,7 +3,8 @@ package org.example.logica;
 import java.util.Optional;
 
 import jakarta.transaction.Transactional;
-import org.example.dtos.EstadoDTO;
+import org.example.dtos.Request;
+import org.example.dtos.Respuesta;
 import org.example.modelo.Cuentas;
 import org.example.modelo.repository.ICuentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class CapaService implements ICapaService {
     @Transactional
     @Override
     public int altaCuenta(Cuentas cuenta) {
-        EstadoDTO estadoDTO = new EstadoDTO();
+        Respuesta estadoDTO = new Respuesta();
         iCuentaRepository.save(cuenta);
         estadoDTO.setEstatus(0);
         System.out.println(iCuentaRepository.save(cuenta));
@@ -40,19 +41,20 @@ public class CapaService implements ICapaService {
     }
 
     @Override
-    public int deposito(String numeroCuenta, int monto) {
-
+    public int deposito(String numeroCuenta, Request monto) {
+        //Traemos cuenta
         Cuentas nuevaCuenta = iCuentaRepository.findByNumeroCuenta(numeroCuenta);
         //Vamos a depositar, no hay restriccion respecto a nuestro saldo actual
-        Integer saldoNuevo = nuevaCuenta.getSaldo() + monto;
-        nuevaCuenta.setSaldo(saldoNuevo);
-
+        if(monto.getSaldo()!= 0) { //para evitar que este vacio
+            Integer saldoNuevo = nuevaCuenta.getSaldo() + monto.getSaldo();
+            nuevaCuenta.setSaldo(saldoNuevo);
+        }
         return 0;
     }
 
     @Override
-    public int retiro(String numeroCuenta, int monto) { // monto --> cantidad a retirar
-        EstadoDTO estadoDTO = new EstadoDTO();
+    public int retiro(String numeroCuenta, Request monto) { // monto --> cantidad a retirar
+        Respuesta estadoDTO = new Respuesta();
 
         /*
          * Obtenemos la cuenta correspondiente a el numero de cueta
@@ -65,9 +67,9 @@ public class CapaService implements ICapaService {
             int saldo = result.get().getSaldo();
             // Se va a hacer un retiro entonces a la cantidad que tenemos se le resta la
             // cantidad que va a sacar el cliente
-            if (saldo >= monto) { // debemos tener mas dinero que lo que vamos a sacar
+            if (saldo >= monto.getSaldo()) { // debemos tener mas dinero que lo que vamos a sacar
                 //tambien el monto no debe ser mayor al saldo que tenemos
-                int saldoNuevo = saldo - monto;
+                int saldoNuevo = saldo - monto.getSaldo();
                 result.get().setSaldo(saldoNuevo);
                 iCuentaRepository.save(result.get());
                 return 1;

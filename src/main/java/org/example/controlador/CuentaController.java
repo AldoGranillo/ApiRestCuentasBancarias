@@ -1,5 +1,6 @@
 package org.example.controlador;
 
+import org.example.dtos.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.example.logica.CapaService;
-import org.example.dtos.EstadoDTO;
+import org.example.dtos.Respuesta;
 import org.example.modelo.Cuentas;
 
 @RestController
@@ -25,11 +26,9 @@ public class CuentaController {
     }
 
     @PostMapping("/cuentas")
-    public ResponseEntity<EstadoDTO> crearCuentas(@RequestBody Cuentas cuenta) {
-        EstadoDTO estadoDTO = new EstadoDTO();
-        System.out.println(cuenta + "Entrando al if");
+    public ResponseEntity<Respuesta> crearCuentas(@RequestBody Cuentas cuenta) {
+        Respuesta estadoDTO = new Respuesta();
         if (cuenta != null) {
-            System.out.println("Estamos dentro del if");
             estadoDTO.setEstatus(capaService.altaCuenta(cuenta));
             return ResponseEntity.ok().body(estadoDTO);
         }
@@ -37,8 +36,8 @@ public class CuentaController {
     }
 
     @GetMapping("/cuentas/{numeroCuentas}")
-    public ResponseEntity<EstadoDTO> consultaCuenta(@PathVariable String numeroCuentas) {
-        EstadoDTO estadoDTO = new EstadoDTO();
+    public ResponseEntity<Respuesta> consultaCuenta(@PathVariable String numeroCuentas) {
+        Respuesta estadoDTO = new Respuesta();
         if (!numeroCuentas.isEmpty()) {
             estadoDTO.setObjeto(capaService.consultaCuentas(numeroCuentas));
             return ResponseEntity.ok().body(estadoDTO);
@@ -47,10 +46,9 @@ public class CuentaController {
     }
 
     @PutMapping("/cuentas/{numeroCuenta}/deposito")
-    public ResponseEntity<EstadoDTO> depositarSaldo(
-            @PathVariable String numeroCuenta, @RequestBody int deposito) {
-        EstadoDTO estadoDTO = new EstadoDTO();
-        if (numeroCuenta != null && deposito != 0) {
+    public ResponseEntity<Respuesta> depositarSaldo(@PathVariable String numeroCuenta, @RequestBody Request deposito) {
+        Respuesta estadoDTO = new Respuesta();
+        if (numeroCuenta != null ) {
             estadoDTO.setEstatus(capaService.deposito(numeroCuenta, deposito));
             return ResponseEntity.ok().body(estadoDTO);
         }
@@ -58,10 +56,9 @@ public class CuentaController {
     }
 
     @PutMapping("/cuentas/{numeroCuenta}/retiro")
-    public ResponseEntity<EstadoDTO> retirarSaldo(
-            @PathVariable String numeroCuenta, @RequestBody int retiro) {
-        EstadoDTO estadoDTO = new EstadoDTO();
-        if (numeroCuenta != null && retiro != 0) {
+    public ResponseEntity<Respuesta> retirarSaldo(@PathVariable String numeroCuenta, @RequestBody Request retiro) {
+        Respuesta estadoDTO = new Respuesta();
+        if (numeroCuenta != null) {
             estadoDTO.setEstatus(capaService.retiro(numeroCuenta, retiro));
             return ResponseEntity.ok().body(estadoDTO);
         }

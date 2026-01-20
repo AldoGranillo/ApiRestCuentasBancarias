@@ -35,6 +35,10 @@ dependencies {
     //Dependencia para spring security basica
     implementation("org.springframework.boot:spring-boot-starter-security:4.0.0")
 
+    //para pruebas
+    testImplementation("junit:junit:4.13.2")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 tasks.test {
