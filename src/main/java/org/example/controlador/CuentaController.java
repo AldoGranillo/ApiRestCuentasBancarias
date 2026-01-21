@@ -26,11 +26,13 @@ public class CuentaController {
     }
 
     @PostMapping("/cuentas")
-    public ResponseEntity<Respuesta> crearCuentas(@RequestBody Cuentas cuenta) {
+    public ResponseEntity<Respuesta> crearCuentas(@RequestBody Request cuenta) {
         Respuesta estadoDTO = new Respuesta();
         if (cuenta != null) {
-            estadoDTO.setEstatus(capaService.altaCuenta(cuenta));
-            return ResponseEntity.ok().body(estadoDTO);
+            estadoDTO=(capaService.altaCuenta(cuenta));
+            if (estadoDTO.getEstatus() == 200) {
+                return ResponseEntity.ok().body(estadoDTO);
+            }
         }
         return ResponseEntity.badRequest().body(estadoDTO);
     }
@@ -39,8 +41,10 @@ public class CuentaController {
     public ResponseEntity<Respuesta> consultaCuenta(@PathVariable String numeroCuentas) {
         Respuesta estadoDTO = new Respuesta();
         if (!numeroCuentas.isEmpty()) {
-            estadoDTO.setObjeto(capaService.consultaCuentas(numeroCuentas));
-            return ResponseEntity.ok().body(estadoDTO);
+            estadoDTO = capaService.consultaCuentas(numeroCuentas);
+            if(estadoDTO.getEstatus() == 200) {
+                return ResponseEntity.ok().body(estadoDTO);
+            }
         }
         return ResponseEntity.badRequest().body(estadoDTO);
     }
@@ -49,8 +53,10 @@ public class CuentaController {
     public ResponseEntity<Respuesta> depositarSaldo(@PathVariable String numeroCuenta, @RequestBody Request deposito) {
         Respuesta estadoDTO = new Respuesta();
         if (numeroCuenta != null ) {
-            estadoDTO.setEstatus(capaService.deposito(numeroCuenta, deposito));
-            return ResponseEntity.ok().body(estadoDTO);
+            estadoDTO=capaService.deposito(numeroCuenta, deposito);
+            if (estadoDTO.getEstatus() == 200) {
+                return ResponseEntity.ok().body(estadoDTO);
+            }
         }
         return ResponseEntity.badRequest().body(estadoDTO);
     }
@@ -59,8 +65,10 @@ public class CuentaController {
     public ResponseEntity<Respuesta> retirarSaldo(@PathVariable String numeroCuenta, @RequestBody Request retiro) {
         Respuesta estadoDTO = new Respuesta();
         if (numeroCuenta != null) {
-            estadoDTO.setEstatus(capaService.retiro(numeroCuenta, retiro));
-            return ResponseEntity.ok().body(estadoDTO);
+            estadoDTO = capaService.retiro(numeroCuenta, retiro);
+            if (estadoDTO.getEstatus() == 200) {
+                return ResponseEntity.ok().body(estadoDTO);
+            }
         }
         return ResponseEntity.badRequest().body(estadoDTO);
     }

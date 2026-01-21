@@ -22,39 +22,57 @@ public class CapaService implements ICapaService {
 
     @Transactional
     @Override
-    public int altaCuenta(Cuentas cuenta) {
-        Respuesta estadoDTO = new Respuesta();
-        iCuentaRepository.save(cuenta);
-        estadoDTO.setEstatus(0);
-        System.out.println(iCuentaRepository.save(cuenta));
-        return 1;
+    public Respuesta altaCuenta(Request cuenta) {
+        Respuesta respuesta = new Respuesta();
+        Cuentas cuentas = new Cuentas();
+        cuentas.setNumero_cuenta(cuenta.getNumeroCuenta());
+        cuentas.setEstado(cuenta.getEstado());
+        cuentas.setSaldo(cuenta.getSaldo());
+        cuentas.setTitular(cuenta.getTitular());
+
+        if(!iCuentaRepository.existsByNumeroCuenta(cuenta.getNumeroCuenta())) {
+            //Si no existe se guarda
+            iCuentaRepository.save(cuentas);
+            respuesta.setEstatus(200);
+        }else {
+            respuesta.setEstatus(400);
+            System.out.println("Esta cuenta ya existe");
+        }
+        return respuesta;
     }
 
     @Override
-    public Cuentas consultaCuentas(String numeroCuenta) {
+    public Respuesta consultaCuentas(String numeroCuenta) {
+        Respuesta respuesta = new Respuesta();
         /**
          * Aca se deberia modelar el dto para no exponerlo en el controler
          */
         Cuentas nuevaCuenta = iCuentaRepository.findByNumeroCuenta(numeroCuenta);
+        respuesta.setObjeto(nuevaCuenta);
+        respuesta.setEstatus(200);
 
-        return nuevaCuenta;
+        return respuesta;
     }
 
     @Override
-    public int deposito(String numeroCuenta, Request monto) {
+    public Respuesta deposito(String numeroCuenta, Request monto) {
+        Respuesta respuesta = new Respuesta();
         //Traemos cuenta
         Cuentas nuevaCuenta = iCuentaRepository.findByNumeroCuenta(numeroCuenta);
         //Vamos a depositar, no hay restriccion respecto a nuestro saldo actual
+
         if(monto.getSaldo()!= 0) { //para evitar que este vacio
             Integer saldoNuevo = nuevaCuenta.getSaldo() + monto.getSaldo();
             nuevaCuenta.setSaldo(saldoNuevo);
+            iCuentaRepository.save(nuevaCuenta);
+            respuesta.setEstatus(200);
         }
-        return 0;
+        return respuesta;
     }
 
     @Override
-    public int retiro(String numeroCuenta, Request monto) { // monto --> cantidad a retirar
-        Respuesta estadoDTO = new Respuesta();
+    public Respuesta retiro(String numeroCuenta, Request monto) { // monto --> cantidad a retirar
+        Respuesta respuesta = new Respuesta();
 
         /*
          * Obtenemos la cuenta correspondiente a el numero de cueta
@@ -72,13 +90,16 @@ public class CapaService implements ICapaService {
                 int saldoNuevo = saldo - monto.getSaldo();
                 result.get().setSaldo(saldoNuevo);
                 iCuentaRepository.save(result.get());
-                return 1;
+                respuesta.setEstatus(200);
+
+                return respuesta;
             } else {
                 System.out.println("Saldo insuficiente : $" + saldo + ".00");
-                return 0;
+                respuesta.setEstatus(400);
+                return respuesta;
             }
 
         }
-        return 0;
+        return respuesta;
     }
 }

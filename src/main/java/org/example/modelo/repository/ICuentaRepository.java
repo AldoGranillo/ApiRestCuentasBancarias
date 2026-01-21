@@ -11,4 +11,7 @@ public interface ICuentaRepository extends JpaRepository<Cuentas, Integer> {
 
     @Query("FROM Cuentas WHERE numero_cuenta=:pnumc")
     Cuentas findByNumeroCuenta(@Param("pnumc") String pnumc);
+
+    @Query("FROM Cuentas WHERE  numero_cuenta=: pnumc")
+    Boolean existsByNumeroCuenta(@Param("pnumc") String pnumc);
 }

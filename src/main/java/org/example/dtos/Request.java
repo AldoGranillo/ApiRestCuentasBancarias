@@ -6,7 +6,7 @@ public class Request {
     /**
      * Este sera el dto para enviar datos al end point
      */
-    private String numero_cuenta;
+    private String numeroCuenta;
 
     private String titular;
 
@@ -19,18 +19,18 @@ public class Request {
     }
 
     public Request(String numero_cuenta, String titular, int saldo, String estado) {
-        this.numero_cuenta = numero_cuenta;
+        this.numeroCuenta = numero_cuenta;
         this.titular = titular;
         this.saldo = saldo;
         this.estado = estado;
     }
 
-    public String getNumero_cuenta() {
-        return numero_cuenta;
+    public String getNumeroCuenta() {
+        return numeroCuenta;
     }
 
-    public void setNumero_cuenta(String numero_cuenta) {
-        this.numero_cuenta = numero_cuenta;
+    public void setNumeroCuenta(String numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
     }
 
     public String getTitular() {
